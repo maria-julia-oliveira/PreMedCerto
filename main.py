@@ -1,10 +1,28 @@
+import os
 from flask import Flask
+from supabase import create_client, Client
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-@app.route("/")
-def index():
-    return "Hello, Flask!"
+supabase: Client = create_client(
+    os.environ.get("SUPABASE_URL"),
+    os.environ.get("SUPABASE_KEY")
+)
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+@app.route('/')
+def index():
+    response = supabase.table('doutor').select("*").execute()
+    todos = response.data
+
+    html = '<h1>Todos</h1><ul>'
+    for todo in todos:
+        html += f'<li>{todo["doutor"]}</li>'
+    html += '</ul>'
+
+    return html
+
+if __name__ == '__main__':
+    app.run(debug=True)
