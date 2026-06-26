@@ -14,15 +14,8 @@ supabase: Client = create_client(
 
 @app.route('/')
 def index():
-    response = supabase.table('doutor').select("*").execute()
-    todos = response.data
-
-    html = '<h1>Todos</h1><ul>'
-    for todo in todos:
-        html += f'<li>{todo["doutor"]}</li>'
-    html += '</ul>'
-
-    return html
+    msg = "Conectado com sucesso"
+    return msg
 
 if __name__ == '__main__':
     app.run(debug=True)
